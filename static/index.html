@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>湖表压实台</title>
+  <link rel="stylesheet" href="/static/css/compact.css" />
+</head>
+<body>
+  <div class="layout">
+    <aside class="rail">
+      <p class="brand" id="lab-name">湖表压实台</p>
+      <nav class="timeline">
+        <button type="button" data-tab="files" class="on">1 小文件清单</button>
+        <button type="button" data-tab="plans">2 压实计划</button>
+        <button type="button" data-tab="rewrite">3 重写合并</button>
+        <button type="button" data-tab="reconcile">4 体积对账</button>
+        <button type="button" data-tab="settings">5 台参数</button>
+      </nav>
+      <button type="button" id="btn-logout" class="ghost">退出</button>
+    </aside>
+    <main>
+      <p class="muted" id="msg"></p>
+      <div id="view"></div>
+    </main>
+  </div>
+  <script type="module" src="/static/js/app.js"></script>
+</body>
+</html>
