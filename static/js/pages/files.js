@@ -21,7 +21,7 @@ export async function renderFiles(view, setMsg) {
     <section class="wall" style="margin-top:1rem">
       ${(j.items || []).map(f => `<article class="card">
         <h3>${f.path}</h3>
-        <span class="tag">${f.status}</span> <span class="tag">入口已切断</span>
+        <span class="tag">${f.status}</span> ${f.status === '作废' ? '<span class="tag">入口已切断</span>' : ''}
         <p class="muted">${f.table_name} · ${f.size_bytes} 字节</p>
         <button data-void="${f.id}" type="button" ${f.status==='已合并'?'disabled':''}>作废</button>
       </article>`).join('') || '<p class="muted">暂无文件</p>'}

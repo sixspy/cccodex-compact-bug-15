@@ -3,7 +3,7 @@ import { api } from '../api.js';
 export async function renderRewrite(view, setMsg) {
   const plans = await api('/api/plans');
   const jobs = await api('/api/rewrite/jobs');
-  const options = (plans.items || []).map(p => `<option value="${p.id}">${p.plan_code} · ${p.status}</option>`).join('');
+  const options = (plans.items || []).map(p => `<option value="${p.id}" ${p.status === '已作废' ? 'disabled' : ''}>${p.plan_code} · ${p.status}${p.status === '已作废' ? ' · 拒启' : ''}</option>`).join('');
   view.innerHTML = `
     <section class="card">
       <h2>重写合并</h2>

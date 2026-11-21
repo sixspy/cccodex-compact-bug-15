@@ -84,17 +84,19 @@ def seed_if_needed(db_path: str | None = None) -> dict:
             (SCHEMA_VERSION,),
         )
         conn.execute("INSERT INTO meta(key, value) VALUES ('lab','湖表压实台')")
-        try:
-            from app.services.void_entry_surface import seed_skew
-            seed_skew(db_path)
-        except Exception:
-            pass
-        return {
+        result = {
             "seeded": True,
             "files": len(files),
             "plans": 1,
             "settings": 3,
         }
+    # 事务提交后再写展示面默认值，避免嵌套连接互等锁
+    try:
+        from app.services.void_entry_surface import seed_skew
+        seed_skew(db_path)
+    except Exception:
+        pass
+    return result
 
 
 def reset_seed(db_path: str | None = None) -> None:

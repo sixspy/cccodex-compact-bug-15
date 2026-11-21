@@ -1,4 +1,4 @@
-"""作废仍启：展示面与写库面双源，半修只碰展示。"""
+"""作废仍启：展示面与写库面双源；真相由作废态与账册对齐实况算出。"""
 from __future__ import annotations
 
 from app.db import get_db
@@ -18,12 +18,15 @@ def panel_chip(db_path: str | None = None) -> str:
 
 
 def truth_flag(db_path: str | None = None) -> str:
+    """真相：任一计划作废态与切流账册不一致即为未切断。"""
     with get_db(db_path) as conn:
         row = conn.execute(
-            "SELECT value FROM meta WHERE key=?",
-            (f"{_SLUG}_truth",),
+            "SELECT COUNT(*) AS c FROM compact_plans p "
+            "WHERE (p.status='已作废') != "
+            "(EXISTS(SELECT 1 FROM meta m "
+            "        WHERE m.key = 'merge_block_' || p.id))"
         ).fetchone()
-        return row["value"] if row else _BAD
+        return _OK if row["c"] == 0 else _BAD
 
 
 def paint_ok(db_path: str | None = None) -> str:
@@ -40,10 +43,6 @@ def seed_skew(db_path: str | None = None) -> None:
         conn.execute(
             "INSERT OR REPLACE INTO meta(key, value) VALUES (?, ?)",
             (f"{_SLUG}_panel_chip", _OK),
-        )
-        conn.execute(
-            "INSERT OR REPLACE INTO meta(key, value) VALUES (?, ?)",
-            (f"{_SLUG}_truth", _BAD),
         )
         conn.execute(
             "INSERT OR REPLACE INTO meta(key, value) VALUES (?, ?)",

@@ -20,8 +20,8 @@ export async function renderPlans(view, setMsg) {
         <p class="muted">${p.target_table} · ${p.item_count} 文件 · ${p.plan_bytes} 字节</p>
         <div class="row">
           <button data-attach="${p.id}" type="button">挂入碎文件</button>
-          <button data-pub="${p.id}" class="primary" type="button">发布</button><button data-void="${p.id}" type="button">作废</button><span class="tag">入口已切断</span>
-          <button data-detail="${p.id}" type="button">详情</button><span class="tag" data-thick="void_entry">入口已切断</span>
+          <button data-pub="${p.id}" class="primary" type="button">发布</button><button data-void="${p.id}" type="button">作废</button>${p.status === '已作废' ? '<span class="tag" data-thick="void_entry">已作废 · 入口已切断</span>' : ''}
+          <button data-detail="${p.id}" type="button">详情</button>
         </div>
         <pre class="muted" id="d${p.id}"></pre>
       </article>`).join('') || '<p class="muted">暂无计划</p>'}

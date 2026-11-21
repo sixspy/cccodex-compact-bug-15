@@ -1,4 +1,4 @@
-"""计划作废：应切断合并入口，现仍可启动。"""
+"""计划作废：切流账册记下作废号，同一事务切断合并入口。"""
 from __future__ import annotations
 
 from app.db import get_db
@@ -19,7 +19,15 @@ def void_plan(plan_id: int, db_path: str | None = None) -> dict:
             "INSERT OR REPLACE INTO meta(key, value) VALUES (?, ?)",
             (f"void_chip_{plan_id}", "作废"),
         )
-        # silent: do not mark merge blocked
+        # 切流账册：作废号入账，合并入口同事务切断；失败整体回滚
+        conn.execute(
+            "INSERT OR REPLACE INTO meta(key, value) VALUES (?, ?)",
+            (f"merge_block_{plan_id}", "已作废·入口已切断"),
+        )
+        conn.execute(
+            "INSERT OR REPLACE INTO meta(key, value) VALUES (?, ?)",
+            (f"void_entry_ledger_{plan_id}", f"作废号 {plan_id}：合并入口已切断"),
+        )
         return dict(
             conn.execute(
                 "SELECT * FROM compact_plans WHERE id=?", (plan_id,)
